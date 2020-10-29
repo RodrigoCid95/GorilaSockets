@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SocketsServer = void 0;
 var tslib_1 = require("tslib");
-var Socket = require("socket.io");
+var SocketIo = require("socket.io");
 var core_1 = require("@gorila/core");
 var Path = require("path");
 var fs = require("fs");
@@ -17,6 +17,7 @@ var SocketsServer = (function () {
             this.loaderConfig = require(Path.normalize(this.rootDir + "/config")).default;
         }
         this.socketsConfig = this.loaderConfig.getConfig('GorilaSockets');
+        this.port = (this.socketsConfig.port ? this.socketsConfig.port : 5000);
     }
     SocketsServer.prototype.init = function () {
         var _a;
@@ -74,7 +75,7 @@ var SocketsServer = (function () {
     };
     SocketsServer.prototype.runSocketsServer = function () {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var dirControllers, classes;
+            var dirControllers, classes, arg1;
             var _this = this;
             return tslib_1.__generator(this, function (_a) {
                 dirControllers = Path.normalize(this.rootDir + "/Controllers/sockets.js");
@@ -86,7 +87,9 @@ var SocketsServer = (function () {
                         _this.routes = _this.routes.concat(instance['routes']);
                     });
                     core_1.Log('Controladores cargados!');
-                    this.io = Socket(this.httpServer, this.socketsConfig);
+                    arg1 = null;
+                    arg1 = (this.httpServer ? this.httpServer : this.port);
+                    this.io = new SocketIo(arg1, this.socketsConfig);
                     this.io.on('connect', function (socket) {
                         var _a, _b;
                         ((_b = (_a = _this.socketsConfig) === null || _a === void 0 ? void 0 : _a.events) === null || _b === void 0 ? void 0 : _b.onConnect) ? _this.socketsConfig.events.onConnect(socket) : null;
@@ -138,7 +141,6 @@ var SocketsServer = (function () {
                             }
                         });
                     });
-                    core_1.Log('Sockets server listo!');
                 }
                 else {
                     console.error("No se encontr\u00F3 el archivo " + dirControllers + "!");
