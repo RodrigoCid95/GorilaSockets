@@ -1,17 +1,1 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.On = void 0;
-function On(path) {
-    return function (target, propertyKey, descriptor) {
-        if (!target.hasOwnProperty('routes')) {
-            target['routes'] = [];
-        }
-        target['routes'].push({
-            path: path,
-            function: target[propertyKey].bind(target),
-        });
-        return descriptor;
-    };
-}
-exports.On = On;
-//# sourceMappingURL=router.js.map
+"use strict";function On(e){return function(t,r,n){return t.hasOwnProperty("routes")||(t.routes=[]),t.routes.push({path:e,callback:t[r].bind(t)}),n}}Object.defineProperty(exports,"__esModule",{value:!0}),exports.On=void 0,exports.On=On;
